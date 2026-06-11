@@ -27,6 +27,9 @@ const (
 type ELiveActivityEvent string
 
 const (
+	// LiveActivityEventStart is used to start a live activity.
+	LiveActivityEventStart ELiveActivityEvent = "start"
+
 	// LiveActivityEventUpdate is used to update an live activity.
 	LiveActivityEventUpdate ELiveActivityEvent = "update"
 
@@ -51,6 +54,8 @@ type aps struct {
 	Sound             any                `json:"sound,omitempty"`
 	ThreadID          string             `json:"thread-id,omitempty"`
 	URLArgs           []string           `json:"url-args,omitempty"`
+	AttributesType    string             `json:"attributes-type,omitempty"`
+	Attributes        map[string]any     `json:"attributes,omitempty"`
 	ContentState      map[string]any     `json:"content-state,omitempty"`
 	DismissalDate     int64              `json:"dismissal-date,omitempty"`
 	StaleDate         int64              `json:"stale-date,omitempty"`
@@ -106,6 +111,22 @@ func (p *Payload) SetContentState(contentState map[string]any) *Payload {
 	return p
 }
 
+// SetAttributesType sets the aps attributes-type for starting a live activity.
+//
+//	{"aps":{"attributes-type": AttributesType }}`
+func (p *Payload) SetAttributesType(attributesType string) *Payload {
+	p.aps().AttributesType = attributesType
+	return p
+}
+
+// SetAttributes sets the aps attributes for starting a live activity.
+//
+//	{"aps":{"attributes": {} }}`
+func (p *Payload) SetAttributes(attributes map[string]any) *Payload {
+	p.aps().Attributes = attributes
+	return p
+}
+
 // SetDismissalDate sets the aps dismissal-date on the payload.
 // This will remove the live activity from the user's UI at the given timestamp.
 //
@@ -125,7 +146,7 @@ func (p *Payload) SetStaleDate(staleDate int64) *Payload {
 }
 
 // SetEvent sets the aps event type on the payload.
-// This can either be `LiveActivityEventUpdate` or `LiveActivityEventEnd`
+// This can be `LiveActivityEventStart`, `LiveActivityEventUpdate`, or `LiveActivityEventEnd`
 //
 //	{"aps":{"event": Event }}`
 func (p *Payload) SetEvent(event ELiveActivityEvent) *Payload {

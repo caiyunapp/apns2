@@ -153,6 +153,18 @@ func TestContentState(t *testing.T) {
 	assert.Equal(t, `{"aps":{"content-state":{"my_int":13,"my_string":"foo"}}}`, string(b))
 }
 
+func TestAttributesType(t *testing.T) {
+	payload := NewPayload().SetAttributesType("CaiyunPrecipLiveActivityAttributes")
+	b, _ := json.Marshal(payload)
+	assert.Equal(t, `{"aps":{"attributes-type":"CaiyunPrecipLiveActivityAttributes"}}`, string(b))
+}
+
+func TestAttributes(t *testing.T) {
+	payload := NewPayload().SetAttributes(map[string]any{"address": "Beijing", "type": "PRECIP"})
+	b, _ := json.Marshal(payload)
+	assert.Equal(t, `{"aps":{"attributes":{"address":"Beijing","type":"PRECIP"}}}`, string(b))
+}
+
 func TestDismissalDate(t *testing.T) {
 	timestamp := time.Date(2023, 1, 27, 12, 14, 00, 00, time.UTC).Unix()
 	payload := NewPayload().SetDismissalDate(timestamp)
@@ -177,6 +189,12 @@ func TestEventUpdate(t *testing.T) {
 	payload := NewPayload().SetEvent(LiveActivityEventUpdate)
 	b, _ := json.Marshal(payload)
 	assert.Equal(t, `{"aps":{"event":"update"}}`, string(b))
+}
+
+func TestEventStart(t *testing.T) {
+	payload := NewPayload().SetEvent(LiveActivityEventStart)
+	b, _ := json.Marshal(payload)
+	assert.Equal(t, `{"aps":{"event":"start"}}`, string(b))
 }
 
 func TestTimestamp(t *testing.T) {
